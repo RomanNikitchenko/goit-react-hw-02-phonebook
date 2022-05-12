@@ -2,8 +2,15 @@ import React from 'react';
 
 class App extends React.Component {
   state = {
-    contacts: [],
-    name: ''
+    contacts: [
+      {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
+      {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
+      {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
+      {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+    ],
+    filter: '',
+    name: '',
+    number: ''
   }
 
   handleChange = evt => {
@@ -13,19 +20,46 @@ class App extends React.Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    const { name, contacts } = this.state;
-    contacts.push(name);
+    const { elements } = evt.currentTarget;
+    const { name, contacts, number } = this.state;
+
+    contacts.every(contact => {
+      if (contact.name === elements.name.value) {
+        return console.log("true")
+      } else {
+        console.log(elements.name.value);
+        contacts.push({ name: name, number: number });
+      };
+    });
+
     this.reset();
   };
 
   reset = () => {
     this.setState({
-      name: ''
+      name: '',
+      number: '',
+      search: ''
     });
   };
 
+
+
+  handleChangeFilter = evt => {
+    const { name, value } = evt.target;
+    this.setState({ [name]: value });
+    
+    const { contacts } = this.state;
+    
+    const search = contacts.filter(({ name }) => {
+      return name.toLowerCase().includes(value);
+    })
+
+    this.setState({ search });
+  };
+
   render() {
-    const { name, contacts } = this.state;
+    const { name, contacts, number, filter, search } = this.state;
 
     return (
       <div>
@@ -43,11 +77,42 @@ class App extends React.Component {
             />
           </label>
 
+          <label>
+            Number
+            <input
+              type="tel"
+              name="number"
+              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+              required
+              value={number}
+              onChange={this.handleChange}
+            />
+          </label>
+
           <button type="submit">Add contact</button>
         </form>
+
+        <label>
+            Filter
+            <input
+              type="text"
+              name="filter"
+              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+              required
+              value={filter}
+              onChange={this.handleChangeFilter}
+            />
+        </label>
+        
         <ul>
-          {contacts.map(contact => ( <li key={contact}>{contact}</li> ))}
+          {search ?
+            search.map(({ name, number }) => (<li key={number}>{name}: {number}</li>)) : 
+            contacts.map(({ name, number }) => (<li key={number}>{name}: {number}</li>))
+          }
         </ul>
+
       </div>
     );
   }
