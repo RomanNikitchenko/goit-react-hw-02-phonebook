@@ -113,11 +113,17 @@ class App extends React.Component {
             ? search.map(({ name, number }) => (
                 <li key={number}>
                   {name}: {number}
+                  <button key={number} type="button">
+                    delete
+                  </button>
                 </li>
               ))
             : contacts.map(({ name, number }) => (
                 <li key={number}>
                   {name}: {number}
+                  <button key={number} type="button">
+                    delete
+                  </button>
                 </li>
               ))}
         </ul>
