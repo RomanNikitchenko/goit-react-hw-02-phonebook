@@ -3,15 +3,15 @@ import React from 'react';
 class App extends React.Component {
   state = {
     contacts: [
-      {id: 'id-1', name: 'Rosie Simpson', number: '459-12-56'},
-      {id: 'id-2', name: 'Hermione Kline', number: '443-89-12'},
-      {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
-      {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
     name: '',
-    number: ''
-  }
+    number: '',
+  };
 
   handleChange = evt => {
     const { name, value } = evt.target;
@@ -20,18 +20,8 @@ class App extends React.Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
-    const { elements } = evt.currentTarget;
-    const { name, contacts, number } = this.state;
-
-    contacts.every(contact => {
-      if (contact.name === elements.name.value) {
-        return console.log("true")
-      } else {
-        console.log(elements.name.value);
-        contacts.push({ name: name, number: number });
-      };
-    });
-
+    const { elements } = evt.target;
+    this.similarSearch(elements);
     this.reset();
   };
 
@@ -39,23 +29,35 @@ class App extends React.Component {
     this.setState({
       name: '',
       number: '',
-      search: ''
+      search: '',
     });
   };
-
-
 
   handleChangeFilter = evt => {
     const { name, value } = evt.target;
     this.setState({ [name]: value });
-    
+
     const { contacts } = this.state;
-    
+
     const search = contacts.filter(({ name }) => {
       return name.toLowerCase().includes(value);
-    })
+    });
 
     this.setState({ search });
+  };
+
+  similarSearch = elements => {
+    const { name, contacts, number } = this.state;
+
+    const listNames = [];
+
+    contacts.map(({ name }) => listNames.push(name));
+
+    if (!listNames.includes(elements.name.value)) {
+      contacts.push({ name: name, number: number });
+    } else {
+      alert('Hello');
+    }
   };
 
   render() {
@@ -94,28 +96,34 @@ class App extends React.Component {
         </form>
 
         <label>
-            Filter
-            <input
-              type="text"
-              name="filter"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              value={filter}
-              onChange={this.handleChangeFilter}
-            />
+          Filter
+          <input
+            type="text"
+            name="filter"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+            value={filter}
+            onChange={this.handleChangeFilter}
+          />
         </label>
-        
-        <ul>
-          {search ?
-            search.map(({ name, number }) => (<li key={number}>{name}: {number}</li>)) : 
-            contacts.map(({ name, number }) => (<li key={number}>{name}: {number}</li>))
-          }
-        </ul>
 
+        <ul>
+          {search
+            ? search.map(({ name, number }) => (
+                <li key={number}>
+                  {name}: {number}
+                </li>
+              ))
+            : contacts.map(({ name, number }) => (
+                <li key={number}>
+                  {name}: {number}
+                </li>
+              ))}
+        </ul>
       </div>
     );
   }
-};
+}
 
-export default App
+export default App;
