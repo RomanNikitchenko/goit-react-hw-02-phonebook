@@ -56,7 +56,7 @@ class App extends React.Component {
     if (!listNames.includes(elements.name.value)) {
       contacts.push({ name: name, number: number });
     } else {
-      alert('Hello');
+      alert(`${elements.name.value} is already in contacts`);
     }
   };
 
