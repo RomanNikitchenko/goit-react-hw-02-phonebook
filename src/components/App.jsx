@@ -22,9 +22,11 @@ class App extends React.Component {
       number: number,
     };
 
-    const contactName = this.state.contacts.map(({ name }) => name);
+    const contactName = this.state.contacts.map(({ name }) =>
+      name.toLowerCase()
+    );
 
-    contactName.includes(contact.name)
+    contactName.includes(contact.name.toLowerCase())
       ? alert(`${contact.name} is already in contacts.`)
       : this.setState(({ contacts }) => ({
           contacts: [contact, ...contacts],
