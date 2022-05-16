@@ -48,11 +48,11 @@ class App extends React.Component {
     });
   };
 
-  deleteContact = ContactId => {
+  deleteContact = contactId => {
     this.setState(prevState => {
       return {
         contacts: prevState.contacts.filter(
-          contact => contact.id !== ContactId
+          contact => contact.id !== contactId
         ),
       };
     });
